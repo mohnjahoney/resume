@@ -1,0 +1,214 @@
+% TODO: When to use bullets and when not?
+
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=blue,
+}
+
+\usepackage{pgfpages}
+\usepackage{tikz}
+\usetikzlibrary{calc}
+\usetikzlibrary{matrix}
+\usetikzlibrary{positioning}
+\usepackage[active,tightpage]{preview}
+
+\begin{document}
+\begin{preview}
+
+\definecolor{tempborder}{rgb}{1, 1, 1} % hide temp borders
+%\definecolor{tempborder}{rgb}{0.9, 0, 0.9} % show temp borders
+
+\definecolor{strongblue}{rgb}{0.2, 0.3, 0.7} % main theme color
+
+% Set independent lengths
+\newcommand{\sidebarwidth}{6cm} % width of thin sidebar that runs down the side
+\newcommand{\headerheight}{6cm} % height of header containing name and contact
+\newcommand{\splitradius}{0.6cm} % split circle separates the four quadrants
+
+\newcommand{\sectionpad}{0.3cm} % separation between section header and section and v.v.
+
+% Compute dependent lengths
+% TODO: need to include line widths?
+% TODO: because split circle is touched at diagonal corners, subtracting 2*rad is too much
+% TODO: I think inner sep in the text blocks is messing with things.
+\pgfmathsetlengthmacro\bodywidth{\pdfpagewidth - \sidebarwidth - 2*\splitradius}
+\pgfmathsetlengthmacro\bodyheight{\pdfpageheight - \headerheight - 2*\splitradius}
+
+%%% TIKZPICTURE
+\begin{tikzpicture} [
+mat/.style={draw=tempborder, rectangle, matrix of nodes, rounded corners, line width=2pt, inner sep=0pt, outer sep=0pt},
+sec_title_mat/.style={mat, draw=none},%, text width=, text depth=}, % use matrix for organizing each section
+sec_body_mat/.style={mat, draw=none, fill=strongblue!10!white},%, text width=, text depth=}, % use matrix for organizing each section
+sec_title/.style={font=\Large}, % section title
+sec_bold/.style={font=\bfseries\large, inner sep=5pt}, % bold "bullets" within each section
+sec_text/.style={font=\normalsize, inner sep=5pt}, % main text in each section
+remember picture]
+
+%% draw image
+%\node[inner sep=0, opacity=0.3] at (current page)
+%%{\includegraphics[width=\paperwidth,height=\paperheight]{poincare_mosaic.pdf}};
+%{\includegraphics[width=\paperwidth,height=\paperheight]{me.png}};
+
+%%% Split point - this is the main organizational coordinate
+\node[draw=strongblue, circle, line width=2pt, minimum width=2*\splitradius] (split) at (\sidebarwidth, \pdfpageheight - 
+\headerheight) {};
+%\coordinate(split) at (\sidebarwidth, \pdfpageheight - 
+%\headerheight);
+
+\draw[strongblue, line width=5pt] (split.center) -- ++(\bodywidth, 0);
+\draw[strongblue, line width=5pt] (split.center) -- ++(-\sidebarwidth, 0);
+\draw[strongblue, line width=5pt] (split.center) -- ++(0, -\bodyheight);
+
+%%% Name
+\node[color=white, fill=strongblue, font=\Huge, scale=2.0, anchor=south west] (name) at ($(split.north east) + (0, 0)$) {John R. Mahoney};
+
+%%% Contact
+% TODO: replace some of these (like linkedin) with linked icons
+\matrix[mat, font=\large, anchor=south east] (contact) at ($(split.north west) + (0.0cm, 0.0cm)$) {
+mohnjahoney@gmail.com\\
+(530) 601-0524\\
+\href{https://mohnjahoney.github.io}{mohnjahoney.github.io}\\
+\href{https://www.linkedin.com/in/johnmahoney3}{linkedin.com/in/johnmahoney3}\\
+};
+
+%%% Profile
+\matrix[sec_title_mat, anchor=north west,
+row 1/.style={anchor=center}] (profile_title) at ($(split.south east) + (0.0cm, 0.0cm)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~PROFILE~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north west, 
+column 1/.style={sec_text, text width=1.0*\bodywidth}] (profile) at ($(profile_title.south west) + (0.0, -\sectionpad)$){
+I'm a rad dad who wishes to make the world a fizzier place. 
+A physicist by training and jazz saxophonist by night, I approach the world equally with an analytic mind and a the desire for a deep pocket.\\
+};
+
+%%% Communication Skills
+\matrix[sec_title_mat, anchor=north west,
+row 1/.style={anchor=center}] (communication_skills_title) at ($(profile.south west) + (0.0cm, -\sectionpad)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~COMMUNICATION SKILLS~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north west, 
+column 1/.style={sec_bold, text width=0.2*\bodywidth},
+column 2/.style={sec_text, text width=0.8*\bodywidth}] (communication_skills) at ($(communication_skills_title.south west) + (0.0, -\sectionpad)$){
+Written: &  Wrote and co-authored over 25 peer-reviewed papers in high quality journals (PRL, PRX, PRA, PRE, CHAOS, J. Stat Phys.). edited, track changes, multiple authors, graphics, link to 3? papers on website, served as editor for CHAOS, Complexity, Entropy, Journal of Fluid Mechanics, New Journal of Physics, PLOS, Quantum.\\
+Verbal: & Designed and delivered over 35 talks and posters including presentations at:
+Quantum Information Workshop at Nanyang Technical University, Singapore
+Conference on Complex Systems, Amsterdam
+?? Henri Poincar\`e Institute, Paris
+Workshop at Mathematiches Forschungsinstitut Oberwolfach, Germany (best poster link)
+International Conference on Flow Dynamics, Sendai, Japan
+International Conference on Nonlinear Science and Complexity, Budapest, Hungary\\
+Graphical: & I value design and aesthetics in communication. I seek to balance precision and depth with clarity and impact.\\
+};
+
+%%% Analytic Skills
+\matrix[sec_title_mat, anchor=north west,
+row 1/.style={anchor=center}] (analytic_skills_title) at ($(communication_skills.south west) + (0.0cm, -\sectionpad)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~ANALYTIC SKILLS~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north west, 
+column 1/.style={sec_bold, text width=0.2*\bodywidth},
+column 2/.style={sec_text, text width=0.8*\bodywidth}] (analytic_skills) at ($(analytic_skills_title.south west) + (0.0cm, -\sectionpad)$) {
+Creativity and Brainstorming: & blah.\\
+Critical Thinking \& Problem Solving: &   New Journal of Physics, PLOS, Quantum.\\
+Data Analysis: & statistics, interpretation\\
+Research: & werwerw werwerwer werwerwe\\
+};
+
+
+%%% Education
+\matrix[sec_title_mat, anchor=north west,
+row 1/.style={anchor=center}] (education_title) at ($(analytic_skills.south west) + (0.0cm, -\sectionpad)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~EDUCATION~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north west,
+column 1/.style={sec_text, anchor=west}, text width=\bodywidth] (education) at ($(education_title.south west) + (0.0cm, -\sectionpad)$) {
+\textbullet~Ph.D. in Physics, UC, Davis with James P. Crutchfield\\
+%“Extensions of the Theory of Computational Mechanics”
+\textbullet~B.S. in Physics and Mathematics, CSU, Chico\\
+\textbullet~attended Williams College for Physics, Mathematics and Music\\
+};
+
+
+%%%%%%%%%%%
+% Sidebar
+%%%%%%%%%%%
+
+%%% Programming Skills
+\matrix[sec_title_mat, anchor=north east,
+row 1/.style={anchor=center}] (programming_skills_title) at ($(split.south west) + (0.0cm, 0.0cm)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~PROGRAMMING~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+%column 1/.style={font=\bfseries\Large, text width=0.2*\bodywidth},
+%column 2/.style={text width=0.8*\bodywidth}
+\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right, 
+column 1/.style={sec_text, anchor=west}] (programming_skills) at ($(programming_skills_title.south east) + (0.0cm, -\sectionpad)$) {
+Python: np, sp, mpl, pd\\
+GUI / interactive\\
+git, \LaTeX, beamer, tikz\\
+MATLAB\\
+Mac OS, UNIX\\
+};
+
+%%% Interpersonal Skills
+\matrix[sec_title_mat, anchor=north east,
+row 1/.style={anchor=center}] (interpersonal_skills_title) at ($(programming_skills.south east) + (0.0cm, -\sectionpad)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~INTERPERSONAL~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
+column 1/.style={sec_text}] (interpersonal_skills) at ($(interpersonal_skills_title.south east) + (0.0cm, -\sectionpad)$) {
+\textbullet Flexible and creative\\
+\textbullet Excellent listener\\
+\textbullet Work well in close-knit teams\\
+\textbullet Independent worker\\
+\textbullet Thoughtful mentor\\%: (3 PhD, 7 undergrads)\\
+\textbullet Value clear communication\\
+};
+
+
+%%% Projects
+\matrix[sec_title_mat, anchor=north east,
+row 1/.style={anchor=center}] (projects_title) at ($(interpersonal_skills.south east) + (0.0cm, -\sectionpad)$) {
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};&
+~~PROJECTS~~&
+\node[draw=strongblue, circle, minimum width=0.3cm, anchor=center] {};\\
+};
+
+\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
+column 1/.style={sec_text}] (projects) at ($(projects_title.south east) + (0.0cm, -\sectionpad)$) {
+\textbullet Physics and programming course\\
+\textbullet BIM package\\
+\textbullet CMPy contributor\\
+\textbullet this resum\`e template\\
+};
+
+
+\end{tikzpicture}
+\end{preview}
+\end{document}
