@@ -3,6 +3,13 @@
 \documentclass{article}
 
 \usepackage{graphicx}
+\usepackage{libertine}
+\usepackage{libertinust1math}
+\usepackage[T1]{fontenc}
+%\usepackage{lmodern}
+%\usepackage{fontspec}
+%\setmainfont{Linux Libertine O}
+
 \usepackage{xcolor}
 
 \definecolor{tempborder}{rgb}{1, 1, 1} % hide temp borders
@@ -14,7 +21,7 @@
 \hypersetup{
     colorlinks=true,
     linkcolor=strongblue,
-    filecolor=magenta,      
+    filecolor=strongblue,      
     urlcolor=strongblue,
 }
 
@@ -42,9 +49,10 @@
 
 \newcommand{\sectionpad}{0.3cm} % separation between section header and section and v.v.
 
-\newcommand{\vennrad}{3cm}
+\newcommand{\vennrad}{0.4*\sidebarwidth}
 
 % Compute dependent lengths
+% TODO: can I really not do this with \newcommand??
 % TODO: need to include line widths?
 % TODO: I think inner sep in the text blocks is messing with things.
 \pgfmathsetlengthmacro\bodywidth{\pdfpagewidth - \sidebarwidth - 2*\splitradius}
@@ -52,14 +60,17 @@
 
 %%% TIKZPICTURE
 \begin{tikzpicture} [
+% Layout stuff
 mat/.style={draw=tempborder, rectangle, matrix of nodes, rounded corners, line width=0pt, inner sep=0pt, outer sep=0pt},
 sec_title_mat/.style={mat, draw=none, fill=white},%, text width=, text depth=}, % use matrix for organizing each section
-sec_body_mat/.style={mat, draw=none, fill=strongblue!10!white},%, text width=, text depth=}, % use matrix for organizing each section
+sec_body_mat/.style={mat, draw=none, fill=white},%, text width=, text depth=}, % use matrix for organizing each section
+sidebar_body_mat/.style={mat, draw=none, fill=strongblue!8!white},%, text width=, text depth=}, % use matrix for organizing each section
+% Font stuff
 sec_title/.style={font=\Large}, % section title
-sec_title_circle/.style={draw=strongblue, circle, line width=2pt, minimum width=0.2cm, anchor=center}, % circles used to demarkate section titles
-sec_bold/.style={font=\bfseries\normalsize, inner sep=3pt}, % bold "bullets" within each section
-sec_text/.style={font=\normalsize, inner sep=3pt}, % main text in each section
-sidebar_text/.style={font=\large, inner sep=3pt}, % main text in each section
+sec_title_circle/.style={draw=white, circle, line width=2pt, minimum width=0.4cm, anchor=center}, % circles used to demarkate section titles
+sec_bold/.style={font=\bfseries\sffamily\normalsize, inner sep=3pt}, % bold "bullets" within each section
+sec_text/.style={font=\sffamily\normalsize, inner sep=3pt}, % main text in each section
+sidebar_text/.style={font=\sffamily\large, inner sep=3pt}, % main text in each section
 %venn/.style={circle, draw=black!60, semithick, minimum size=5cm},
 remember picture]
 
@@ -94,16 +105,16 @@ remember picture]
 %\node[circle, draw=black!60, semithick, minimum size=2*\vennrad, inner sep=0, outer sep=0] (Past) at ($(split.north west) + (-0.9*\vennrad, 0.9*\vennrad)$) {};
 %\node[circle, draw=black!60, semithick, minimum size=2*\vennrad, inner sep=0, outer sep=0] (Future) at (split.center) {};
 
-\draw[draw=black!40, line width=1pt] ($(split.center) + (-\vennrad, \vennrad)$) circle (\vennrad);
-\draw[draw=black!40, line width=1pt] (split.center) circle (\vennrad);
+%\draw[draw=black!40, line width=1pt] ($(split.center) + (-\vennrad, \vennrad)$) circle (\vennrad);
+%\draw[draw=black!40, line width=1pt] (split.center) circle (\vennrad);
 
 \begin{scope}
 \clip ($(split.center) + (-\vennrad, \vennrad)$) circle (\vennrad);
 \draw[fill=yellow, opacity=0.5] (split.center) circle (\vennrad);
 \end{scope}
 
-\draw[draw=black!50, line width=1pt] ($(split.center) + (-\vennrad, \vennrad)$) circle (\vennrad);
-\draw[draw=black!50, line width=1pt] (split.center) circle (\vennrad);
+\draw[draw=black!20, line width=2pt] ($(split.center) + (-\vennrad, \vennrad)$) circle (\vennrad);
+\draw[draw=black!20, line width=2pt] ($(split.center) + (0, 0)$) +(45:\vennrad) arc (45:225:\vennrad);
 
 % foliation
 \begin{scope}
@@ -144,7 +155,7 @@ row 1/.style={sec_title, anchor=center}] (profile_title) at ($(profile.north wes
 };
 
 %%% NAME other design
-\node[color=white, fill=strongblue, font=\Huge, scale=2.0, anchor=south west] (name) at ($(profile_title.north west) + (0, +\sectionpad)$) {John R. \textcolor{yellow}{Mahoney}};
+\node[color=white, fill=strongblue, font=\Huge, scale=2.0, anchor=south west] (name) at ($(profile_title.north west) + (0, +\sectionpad)$) {\textcolor{white}{John R. Mahoney}};
 
 %\matrix[sec_title_mat, anchor=north west,
 %row 1/.style={anchor=center}] (profile_title) at ($(split.south east) + (0.0cm, 0.0cm)$) {
@@ -162,7 +173,7 @@ row 1/.style={sec_title, anchor=center}] (profile_title) at ($(profile.north wes
 %%% Communication Skills
 \matrix[sec_title_mat, anchor=north west,
 row 1/.style={sec_title, anchor=center}] (communication_skills_title) at ($(split.south east) + (0.0cm, -\sectionpad)$) {
-\node[sec_title_circle] {};&
+\node[sec_title_circle, draw=black!20, fill=green, fill opacity=0.3] {};&
 ~~COMMUNICATION SKILLS~~&
 \node[sec_title_circle] {};\\
 };
@@ -176,7 +187,8 @@ row 1/.style={sec_title, anchor=center}] (communication_skills_title) at ($(spli
 \matrix[sec_body_mat, anchor=north west, 
 column 1/.style={sec_bold, text width=0.2*\bodywidth},
 column 2/.style={sec_text, text width=0.8*\bodywidth}] (communication_skills) at ($(communication_skills_title.south west) + (0.0, -\sectionpad)$){
-Written: &  Wrote and co-authored over 25 papers published in high quality journals (PRL, PRX, PRA, PRE, CHAOS, J. Stat Phys.). Edited multiple articles for colleagues. Refereed for several journals.
+Written: &  Wrote and co-authored over 25 papers published in high quality journals (PRL, PRX, PRA, PRE, CHAOS, J. Stat Phys.). Edited multiple articles for colleagues.
+%Refereed for several journals.
 Read about:
 \href{https://mohnjahoney.github.io/pdfs/Times_Barbed_Arrow.pdf}{prediction}, 
 \href{https://mohnjahoney.github.io/pdfs/A_Turnstile_Mechanism_For_Fronts_Propagating_In_Fluid_Flows.pdf}{reacting fluids}, 
@@ -186,11 +198,11 @@ Quantum Info Workshop at Nanyang Technical University, Singapore;
 Conference on Complex Systems, Amsterdam;
 CHAOS15 at Henri Poincar\'e Institute, Paris;
 Oberwolfach, Germany (awarded \href{https://mohnjahoney.github.io/pdfs/posters/Oberwolfach2014.pdf}{``best poster''});
-International Conference on Flow Dynamics, Sendai, Japan
+%International Conference on Flow Dynamics, Sendai, Japan
 %International Conference on Nonlinear Science and Complexity, Budapest, Hungary
 % TODO: add "Listen to: link to a talk I've given."
 \\
-Graphical: & Value design and aesthetics in communication. I seek to balance precision and depth with clarity and impact. One significant output of my research on reacting flows is the graphical presentation of an augmented flow topology. My research in information theory was often facilitated by Venn diagrams, a technique I helped to incorporate in my research group. Sometimes, as with my study on self-propelled agents, the result is as much art as it is science.
+Visual: & Value aesthetic communication. Seek to balance depth with clarity. Created informative graphical presentation of reacting flow topology. Promoted and taught use of Venn diagrams for information theory. Often discover and appreciate connection between art and science.
 Look at:
 \href{https://mohnjahoney.github.io/images/burning_front_topology.png}{topology of reacting flows}, 
 \href{https://mohnjahoney.github.io/images/FoliationCryptic.pdf}{info diagram}, 
@@ -205,8 +217,8 @@ Look at:
 
 %%% Analytic Skills
 \matrix[sec_title_mat, anchor=north west,
-row 1/.style={sec_title, anchor=center}] (analytic_skills_title) at ($(communication_skills.south west) + (0.0cm, -\sectionpad)$) {
-\node[sec_title_circle] {};&
+row 1/.style={sec_title, anchor=center}] (analytic_skills_title) at ($(communication_skills.south west) + (0.0cm, -2*\sectionpad)$) {
+\node[sec_title_circle, draw=black!20, fill=green, fill opacity=0.3] {};&
 ~~ANALYTIC SKILLS~~&
 \node[sec_title_circle] {};\\
 };
@@ -214,16 +226,16 @@ row 1/.style={sec_title, anchor=center}] (analytic_skills_title) at ($(communica
 \matrix[sec_body_mat, anchor=north west, 
 column 1/.style={sec_bold, text width=0.2*\bodywidth},
 column 2/.style={sec_text, text width=0.8*\bodywidth}] (analytic_skills) at ($(analytic_skills_title.south west) + (0.0cm, -\sectionpad)$) {
-Research: & Connected my work on reacting fluids to several existing fields: invariant manifolds, finite-time Lyapunov exponents, advection-reaction-diffusion equation, catastrophe theory, path planning in autonomous vehicles, differential geometry.\\
-Critical Thinking: & Reframed an assumption in the literature to create a fruitful research avenue - \textit{crypticity and cryptic order}. \\
+Research: & Connected my work on reacting fluids to existing fields: invariant manifolds, FT Lyapunov exponents, ARD equation, catastrophe theory, vehicle path planning, differential geometry.\\
+Critical Thinking: & Reframed an assumption in the literature to build a fruitful research avenue - \textit{crypticity and cryptic order}. \\
 Data: & Created Python pipeline for data on diabetes patients: clean, process, analyze (multiple pair lagged regression), visualize. \\
 };
 
 
 %%% Work Experience
 \matrix[sec_title_mat, anchor=north west,
-row 1/.style={sec_title, anchor=center}] (work_experience_title) at ($(analytic_skills.south west) + (0.0cm, -\sectionpad)$) {
-\node[sec_title_circle] {};&
+row 1/.style={sec_title, anchor=center}] (work_experience_title) at ($(analytic_skills.south west) + (0.0cm, -2*\sectionpad)$) {
+\node[sec_title_circle, draw=black!20, fill=green, fill opacity=0.3] {};&
 ~~WORK EXPERIENCE~~&
 \node[sec_title_circle] {};\\
 };
@@ -246,17 +258,17 @@ Fall 2017&Spring 2018, Math Lecturer: UC Davis\\
 
 %%% Education
 \matrix[sec_title_mat, anchor=north west,
-row 1/.style={sec_title, anchor=center}] (education_title) at ($(work_experience.south west) + (0.0cm, -\sectionpad)$) {
-\node[sec_title_circle] {};&
+row 1/.style={sec_title, anchor=center}] (education_title) at ($(work_experience.south west) + (0.0cm, -2*\sectionpad)$) {
+\node[sec_title_circle, draw=black!20, fill=green, fill opacity=0.3] {};&
 ~~EDUCATION~~&
 \node[sec_title_circle] {};\\
 };
 
 \matrix[sec_body_mat, anchor=north west,
 column 1/.style={sec_text, anchor=west}, text width=\bodywidth] (education) at ($(education_title.south west) + (0.0cm, -\sectionpad)$) {
-Ph.D. in Physics, UC, Davis with James P. Crutchfield\\
+Ph.D. in Physics, UC Davis, advisor: James P. Crutchfield\\
 %“Extensions of the Theory of Computational Mechanics”
-B.S. in Physics and Mathematics, CSU, Chico\\
+B.S. in Physics and Mathematics, CSU Chico\\
 attended Williams College for Physics, Mathematics and Music\\
 };
 
@@ -275,7 +287,7 @@ row 1/.style={sec_title, anchor=center}] (programming_skills_title) at ($(split.
 
 %column 1/.style={font=\bfseries\Large, text width=0.2*\bodywidth},
 %column 2/.style={text width=0.8*\bodywidth}
-\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right, 
+\matrix[sidebar_body_mat, anchor=north east, text width=\sidebarwidth, align=right, 
 column 1/.style={sidebar_text, anchor=west}] (programming_skills) at ($(programming_skills_title.south east) + (0.0cm, -\sectionpad)$) {
 Python: np, sp, mpl, pd\\
 GUI / interactive\\
@@ -287,60 +299,59 @@ Mac OS, UNIX\\
 
 %%% Interpersonal Skills
 \matrix[sec_title_mat, anchor=north east,
-row 1/.style={sec_title, anchor=center}] (interpersonal_skills_title) at ($(programming_skills.south east) + (0.0cm, -\sectionpad)$) {
+row 1/.style={sec_title, anchor=center}] (interpersonal_skills_title) at ($(programming_skills.south east) + (0.0cm, -2*\sectionpad)$) {
 \node[sec_title_circle] {};&
 ~~INTERPERSONAL~~&
 \node[sec_title_circle] {};\\
 };
 
-\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
+\matrix[sidebar_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
 column 1/.style={sidebar_text}] (interpersonal_skills) at ($(interpersonal_skills_title.south east) + (0.0cm, -\sectionpad)$) {
 Excellent listener\\
 Flexible and creative\\
 Work well in close-knit teams\\
 Independent worker\\
 Thoughtful mentor\\%: (3 PhD, 7 undergrads)\\
-Value clear communication\\
 };
 
 
 %%% Projects
 \matrix[sec_title_mat, anchor=north east,
-row 1/.style={sec_title, anchor=center}] (projects_title) at ($(interpersonal_skills.south east) + (0.0cm, -\sectionpad)$) {
+row 1/.style={sec_title, anchor=center}] (projects_title) at ($(interpersonal_skills.south east) + (0.0cm, -2*\sectionpad)$) {
 \node[sec_title_circle] {};&
 ~~PROJECTS~~&
 \node[sec_title_circle] {};\\
 };
 
-\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
+\matrix[sidebar_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
 column 1/.style={sidebar_text}] (projects) at ($(projects_title.south east) + (0.0cm, -\sectionpad)$) {
 \href{https://github.com/mohnjahoney/magnacules}{Python \& Physics course}\\
 \href{link}{Burning Invariant Manifolds}\\
 \href{link}{CMPy} contributor\\
 \href{https://github.com/mohnjahoney/simpsons_paradox}{Simpson's Paradox}\\
 \href{link}{timesquare}\\
-this \href{https://github.com/mohnjahoney/resume}{resum\`e}\\
+\href{https://github.com/mohnjahoney/resume}{resum\`e template}\\
 };
 
 
 %%% INTERESTS
 \matrix[sec_title_mat, anchor=north east,
-row 1/.style={sec_title, anchor=center}] (interests_title) at ($(projects.south east) + (0.0cm, -\sectionpad)$) {
+row 1/.style={sec_title, anchor=center}] (interests_title) at ($(projects.south east) + (0.0cm, -2*\sectionpad)$) {
 \node[sec_title_circle] {};&
 ~~INTERESTS~~&
 \node[sec_title_circle] {};\\
 };
 
-\matrix[sec_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
+\matrix[sidebar_body_mat, anchor=north east, text width=\sidebarwidth, align=right,
 column 1/.style={sidebar_text}] (interests) at ($(interests_title.south east) + (0.0cm, -\sectionpad)$) {
 jazz saxophone and piano\\
 soccer, tennis, and hiking\\
-cooking and eating delicious food!\\
+cooking delicious food!\\
 };
 
 
 \matrix[mat, anchor=north east, sidebar_text,
-inner sep=3pt, draw=none, line width=2pt, fill=yellow, fill opacity=0.5, draw opacity=1.0, text opacity=1.0] (contact) at ($(interests.south east) + (0.0cm, -2*\sectionpad)$) {
+inner sep=3pt, draw=none, line width=2pt, fill=white, fill opacity=0.5, draw opacity=1.0, text opacity=1.0] (contact) at ($(interests.south east) + (0.0cm, -2*\sectionpad)$) {
 mohnjahoney@gmail.com\\
 (530) 601-0524\\
 \href{\mywebsite}{mohnjahoney.github.io}\\
