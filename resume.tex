@@ -47,12 +47,12 @@
 \newcommand{\headerheight}{4cm} % height of header containing name and contact
 \newcommand{\splitradius}{0.5cm} % split circle separates the four quadrants
 
-\newcommand{\sectionpad}{0.35cm} % separation between section header and section and v.v.
+\newcommand{\sectionpad}{0.4cm} % separation between section header and section and v.v.
 
 \newcommand{\vennrad}{0.5*\headerheight}
 \newcommand{\divisionlinewidth}{2pt}
-\newcommand{\divisionlinepad}{0.4cm}
-\newcommand{\bodytextinnersep}{3pt}
+\newcommand{\divisionlinepad}{0.5cm}
+\newcommand{\bodytextinnersep}{4pt}
 
 % Compute dependent lengths
 % TODO: can I really not do this with \newcommand??
@@ -125,12 +125,17 @@ remember picture]
 }
 \end{scope}
 
+
+%%% NAME other design
+\node[color=white, fill=strongblue, draw=none, line width=2pt, font=\huge, scale=1.8, rounded corners, anchor=south west] (name) at ($(split.center) + (\divisionlinepad, 4*\sectionpad)$) {\textcolor{white}{~~~~John R. Mahoney~~~~}};
+
 %%% Profile
-\matrix[sec_body_mat, anchor=south west, line width=2pt, draw=none,
-column 1/.style={sec_text, font=\Large, text width=0.9*\bodywidth}] (profile) at ($(split.center) + (\divisionlinepad, 2*\sectionpad)$){
+\matrix[sec_body_mat, anchor=north, line width=2pt, draw=none,
+column 1/.style={sec_text, font=\Large}] (profile) at ($(name.south) + (0, -\sectionpad)$){
 \emph{
 %I am a lifelong learner who cares deeply about our world and the beings in it.
-I love to create, combine, and recontextualize.
+I love to create, connect, and share.
+%I love to create, combine, and recontextualize.
 %I am a vigorous skeptic, but I'm always on your side.
 }\\
 %\emph{
@@ -145,10 +150,6 @@ I love to create, combine, and recontextualize.
 %~~PROFILE~~&
 %\node[sec_title_circle] {};\\
 %};
-
-%%% NAME other design
-\node[color=white, fill=strongblue, draw=none, line width=2pt, font=\huge, scale=1.8, rounded corners, anchor=south west] (name) at ($(profile.north west) + (0, 2*\sectionpad)$) {\textcolor{white}{~~~~John R. Mahoney~~~~}};
-%\node[color=white, fill=strongblue, font=\huge, scale=2.0, anchor=south west] (name) at ($(profile_title.north west) + (0, +\sectionpad)$) {\textcolor{white}{John R. Mahoney}};
 
 %%% Communication Skills
 \matrix[sec_title_mat, anchor=north west,
